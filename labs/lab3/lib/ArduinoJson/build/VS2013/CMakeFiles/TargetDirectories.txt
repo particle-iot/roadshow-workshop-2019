@@ -1,0 +1,6 @@
+E:/Git/Arduino/libraries/ArduinoJson/build/VS2013/CMakeFiles/RUN_TESTS.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/VS2013/CMakeFiles/ALL_BUILD.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/VS2013/CMakeFiles/ZERO_CHECK.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/VS2013/test/CMakeFiles/gtest.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/VS2013/test/CMakeFiles/ArduinoJsonTests.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/VS2013/test/CMakeFiles/RUN_TESTS.dir

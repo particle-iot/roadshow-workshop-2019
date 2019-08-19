@@ -1,0 +1,8 @@
+/host/ArduinoJson/build/CMakeFiles/test.dir
+/host/ArduinoJson/build/CMakeFiles/edit_cache.dir
+/host/ArduinoJson/build/CMakeFiles/rebuild_cache.dir
+/host/ArduinoJson/build/test/CMakeFiles/test.dir
+/host/ArduinoJson/build/test/CMakeFiles/ArduinoJsonTests.dir
+/host/ArduinoJson/build/test/CMakeFiles/gtest.dir
+/host/ArduinoJson/build/test/CMakeFiles/rebuild_cache.dir
+/host/ArduinoJson/build/test/CMakeFiles/edit_cache.dir

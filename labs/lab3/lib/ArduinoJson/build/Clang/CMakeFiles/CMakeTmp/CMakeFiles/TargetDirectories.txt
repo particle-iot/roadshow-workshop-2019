@@ -1,0 +1,2 @@
+E:/Git/Arduino/libraries/ArduinoJson/build/Clang/CMakeFiles/CMakeTmp/CMakeFiles/cmTC_451ef.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/Clang/CMakeFiles/CMakeTmp/CMakeFiles/ALL_BUILD.dir

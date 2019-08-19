@@ -1,0 +1,19 @@
+DynamicJsonBuffer 5 0.0197876
+IntegrationTests 16 0.00789577
+JsonArray 15 0.00468027
+JsonObject 16 0.00538005
+JsonDeserializer 15 0.00667114
+JsonSerializer 16 0.00473027
+JsonVariant 16 0.00615593
+JsonWriter 16 0.00365827
+Misc 16 0.0039845
+MsgPackDeserializer 16 0.00530443
+MsgPackSerializer 16 0.00700421
+Polyfills 1 0.0439739
+StaticJsonBuffer 5 0.0143764
+Numbers 15 0.00594848
+DynamicMemoryPool 11 0.010513
+JsonDocument 10 0.00709082
+StaticMemoryPool 11 0.00577126
+MixedConfiguration 8 0.00590693
+---

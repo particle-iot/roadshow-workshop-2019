@@ -1,0 +1,8 @@
+E:/Git/Arduino/libraries/ArduinoJson/build/Clang/CMakeFiles/test.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/Clang/CMakeFiles/edit_cache.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/Clang/CMakeFiles/rebuild_cache.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/Clang/test/CMakeFiles/gtest.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/Clang/test/CMakeFiles/ArduinoJsonTests.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/Clang/test/CMakeFiles/test.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/Clang/test/CMakeFiles/edit_cache.dir
+E:/Git/Arduino/libraries/ArduinoJson/build/Clang/test/CMakeFiles/rebuild_cache.dir

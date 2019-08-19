@@ -1,0 +1,11 @@
+DynamicJsonBuffer 2 0.0587902
+IntegrationTests 2 0.0212879
+JsonArray 2 0.0235147
+JsonBuffer 2 0.0295191
+JsonObject 2 0.0220146
+JsonVariant 2 0.0510359
+JsonWriter 2 0.00950623
+Misc 2 0.0320215
+Polyfills 2 0.0215178
+StaticJsonBuffer 2 0.018012
+---

@@ -1,0 +1,1 @@
+cmd='C:/Program Files/CMake/bin/cmake.exe;-GSublime Text 2 - Ninja;E:/Git/Arduino/libraries/ArduinoJson/test/fuzzing/'

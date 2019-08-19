@@ -1,0 +1,20 @@
+{
+  "name": "roadshow-workshop-2019",
+  "version": "1.0.0",
+  "description": "Workshops designed to teach the basics of IoT development with the Particle ecosystem",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs:build": "vuepress build content"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:particle-iot/roadshow-workshop-2019.git"
+  },
+  "author": "Brandon Satrom <brandon@particle.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/particle-iot/roadshow-workshop-2019/issues"
+  },
+  "homepage": "https://github.com/particle-iot/roadshow-workshop-2019#readme"
+}
