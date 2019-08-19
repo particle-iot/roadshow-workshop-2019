@@ -136,10 +136,10 @@ void setup()
 ```cpp
 void loop()
 {
-  float temp, humidity;
+  int temp, humidity;
 
-  temp = dht.getTempFarenheit();
-  humidity = dht.getHumidity();
+  temp = (int)dht.getTempFarenheit();
+  humidity = (int)dht.getHumidity();
 
   Serial.printlnf("Temp: %f", temp);
   Serial.printlnf("Humidity: %f", humidity);
@@ -160,7 +160,7 @@ Now that you've connected the sensor, let's sprinkle in some Particle goodness.
 
 ### Storing sensor data in Particle variables
 
-1. To use the Particle variable primitive, you need global variables to access. Start by moving the first line of your `loop` which declares the three environment variables to the top of your project, outside of the `setup` and `loop` functions. Let's also change those from `float` to `int` types.
+1. To use the Particle variable primitive, you need global variables to access. Start by moving the first line of your `loop` which declares the two environment variables (`temp` and `humidity`) to the top of your project, outside of the `setup` and `loop` functions. 
 
 ```cpp
 #include "Grove_Temperature_And_Humidity_Sensor.h"
@@ -176,13 +176,6 @@ void setup() {
 void loop() {
   // Existing loop code here
 }
-```
-
-2. In the `loop`, modify the lines that set these variables to implicitly cast each to an `int`.
-
-```cpp
-temp = (int)dht.getTempFarenheit();
-humidity = (int)dht.getHumidity();
 ```
 
 2. With global variables in hand, you can add Particle variables using the `Particle.variable()` method, which takes two parameters: the first is a string representing the name of the variable, and the second is the firmware variable to track. 
