@@ -17,9 +17,9 @@ The workshops are broken into presentations intermixed with hands-on labs that r
 
 - Chapter 1: Claiming your Particle Device
   - Unbox a brand new Argon, claim it to your Particle account, and make it light up with Tinker.
-- Chapter 2: Reading from Sensors & exploring the Particle Device Cloud
+- Chapter 2: Particle Workbench, primitives, and BLE
   - Read the Grove sensors included with the Grove Starter Kit for Particle Mesh, Use particle primities to expose sensor data to the cloud, trigger actions and fire events.
-- Chapter 3: Using Particle Webhooks & Integrations
-  - Learn to use the Particle Webhooks to integrate IoT projects with third-party services and applications, including Azure IoT Central.
+- Chapter 3: On-Device Debugging and integrations
+  - Learn to perform on-device debugging in Particle Workbench, and explore integrations with 3rd party systems.
 
 ---

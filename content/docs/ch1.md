@@ -136,7 +136,7 @@ The "blinky" code is now complete, and it is time to flash it to your physical d
 
 ![](./images/01/webide-devices.png)
 
-11. Your Argon should be on the list, if you have claimed it successfully. If it is online it will have a "breathing" cyan circle right of its name.
+11. Your Argon should be in the list, if you have claimed it successfully. If it is online it will have a "breathing" cyan circle right of its name. If this is your first device, it will be selected automatically and you can flash code to it by clicking the lightning bolt icon. If you have other Particle devices associated to your account, click the star icon next to your new device to select it. Then, click the lightning bolt icon to flash.
     ![](./images/01/webide-device-list.png)
 
 ... and that's how you get to blinky!

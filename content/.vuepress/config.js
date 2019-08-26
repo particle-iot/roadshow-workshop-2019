@@ -13,13 +13,13 @@ module.exports = {
       ['/docs/ch1', 'Chapter 1: Getting your Particle Argon online'],
       [
         '/docs/ch2',
-        'Chapter 2: Working with Particle primitives & Grove Sensors'
+        'Chapter 2: Working with Particle Workbench, primitives & BLE'
       ],
-      ['/docs/ch3', 'Chapter 3: Using Particle Webhooks & Integrations'],
+      ['/docs/ch3', 'Chapter 3: On-Device Debugging and integrations'],
       ['/docs/extra', 'Extra: Going Even Further!']
     ]
   },
-  title: 'Particle Roadshow Workshop',
+  title: 'Particle Accelerate Workshop',
   description:
     'Workshops designed to teach the basics of IoT development with the Particle ecosystem & the Particle Argon'
 };
