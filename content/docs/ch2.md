@@ -349,26 +349,144 @@ In addition to viewing published messages from the console, you can subscribe to
 
 ![](./images/02/light-cli.gif)
 
+## Working with Bluetooth on Particle Devices
+
+For the last section of this lab, we'll explore using BLE to advertise data from your device. Specifically, we'll use BLE to adversise the power and battery state of your Argon, which you'll then read from a browswer using Web BLE and Chrome.
+
+### Using Bluetooth with Particle Gen3 Devices
+
+1. To use Bluetooth with a Gen3 device, you'll need to be running Device OS version 1.3.0 or greater. To set this in Workbench, open the command palette (SHIFT + CMD/CTRL + P), select the "Configure Project for Device" option and select version "deviceOS@1.3.0" or newer.
+
+2. Next, you'll want to install a new library to help with getting power and battery info from your device. Open the command palette, select the "Install Library" command and enter "DiagnosticsHelperRK" into the textbox. Hit enter and the library will be installed.
+
+3. At the top of your project, add an include for the DiagnosticsHelper library.
+
+```cpp
+#include "DiagnosticsHelperRK.h"
+```
+
+4. Next, add some global variables to handle timing for updating the battery state outside of the `setup` and `loop` functions.
+
+```cpp
+const unsigned long UPDATE_INTERVAL = 2000;
+unsigned long lastUpdate = 0;
+```
+
+5. Now, add a UUID for the battery service, and three characteristic objects to represent battery state, power source, and battery level. The service UUID is arbitrary and you should change it from the default below using a UUID generator like the one [here](https://www.uuidgenerator.net/). Keep track of the UUID you create here  because you'll need it in the next section as well. The Service UUIDs should remain unchanged.
+
+```cpp
+// Private battery and power service UUID
+const BleUuid serviceUuid("5c1b9a0d-b5be-4a40-8f7a-66b36d0a5176"); // CHANGE ME
+
+BleCharacteristic batStateCharacteristic("batState", BleCharacteristicProperty::NOTIFY, BleUuid("fdcf4a3f-3fed-4ed2-84e6-04bbb9ae04d4"), serviceUuid);
+BleCharacteristic powerSourceCharacteristic("powerSource", BleCharacteristicProperty::NOTIFY, BleUuid("cc97c20c-5822-4800-ade5-1f661d2133ee"), serviceUuid);
+BleCharacteristic batLevelCharacteristic("batLevel", BleCharacteristicProperty::NOTIFY, BleUuid("d2b26bf3-9792-42fc-9e8a-41f6107df04c"), serviceUuid);
+```
+
+6. Next, create a function to configure and set-up BLE advertising from your device. This snippet will add the three characteristics you defined above, as well as the service UUID you specified, and will advertise itself as a connectable device.
+
+```cpp
+void configureBLE()
+{
+  BLE.addCharacteristic(batStateCharacteristic);
+  BLE.addCharacteristic(powerSourceCharacteristic);
+  BLE.addCharacteristic(batLevelCharacteristic);
+
+  BleAdvertisingData advData;
+
+  // Advertise our private service only
+  advData.appendServiceUUID(serviceUuid);
+
+  // Continuously advertise when not connected
+  BLE.advertise(&advData);
+}
+```
+
+7. At the end of your `setup` function, call the function you just created.
+
+```cpp
+configureBLE();
+```
+
+8. Next, let's modify the `loop` function. We'll start by removing the `delay` at the end of the function, and adding an if statement, which checks the current elapsed time in milliseconds to see if our set interval time (2 seconds, or 2000 ms, in this case) has elapsed. The net result is the same as the `delay` statement we used previously, but with the added benefit that we're not blocking execution elsewhere between each interval.
+
+```cpp
+void loop()
+{
+  if (millis() - lastUpdate >= UPDATE_INTERVAL)
+  {
+    lastUpdate = millis();
+
+    temp = (int)dht.getTempFarenheit();
+    humidity = (int)dht.getHumidity();
+
+    Serial.printlnf("Temp: %f", temp);
+    Serial.printlnf("Humidity: %f", humidity);
+
+    double lightAnalogVal = analogRead(A0);
+    currentLightLevel = map(lightAnalogVal, 0.0, 4095.0, 0.0, 100.0);
+
+    if (currentLightLevel > 50)
+    {
+      Particle.publish("light-meter/level", String(currentLightLevel), PRIVATE);
+    }
+  }
+}
+```
+
+9. Now, let's add our BLE logic to the `loop`, after the `currentLightLevel` if statement. In this code, we check to see if another device (a peripheral) is connected to our Argon. If so. we'll use the diagnostics library to get the current power source, battery state and charge, and set those values to our characteristics, so the connected client can read them.
+
+```cpp
+if (BLE.connected())
+{
+  uint8_t powerSource = (uint8_t)DiagnosticsHelper::getValue(DIAG_ID_SYSTEM_POWER_SOURCE);
+  powerSourceCharacteristic.setValue(powerSource);
+
+  uint8_t batState = (uint8_t)DiagnosticsHelper::getValue(DIAG_ID_SYSTEM_BATTERY_STATE);
+  batStateCharacteristic.setValue(batState);
+
+  uint8_t batLevel = (uint8_t)(DiagnosticsHelper::getValue(DIAG_ID_SYSTEM_BATTERY_CHARGE) >> 8);
+  batLevelCharacteristic.setValue(batLevel);
+}
+```
+
+10. And that's all you need on the Argon side. Flash the latest firmware to your device and move on to the next step!
+
+### Viewing Bluetooth data with Web BLE on Chrome
+
+There are a number of methods by which you can connect to your BLE-powered Argon. You could use a mobile app (like [Bluefruit](https://apps.apple.com/us/app/adafruit-bluefruit-le-connect/id830125974) from Adafruit), or another Particle 3rd Gen device. You can also use a browser that supports Web BLE, like Chrome, which will do in this section. At the time this lab ws created, Chrome is the only desktop browser that supports Web BLE, so you'll need to have that browser installed to 
+
+1. Clone the [demo web app](https://github.com/bsatrom/particle-web-ble) for this project to your machine using a terminal window
+
+```bash
+$ git clone https://github.com/bsatrom/particle-web-ble
+```
+
+2. Open the project in your editor of choice, and modify the following snippet in the `src/scripts/ble.js` file to match the Service UUID you specified in your Argon code above. This code scans for available devices that match a specific UUID, so if you changed it, you should only see your device when running the app.
+
+```js
+const device = await navigator.bluetooth.requestDevice({
+  filters: [{ services: ['5c1b9a0d-b5be-4a40-8f7a-66b36d0a5176'] }] // CHANGE ME
+});
+```
+
+3. In a terminal window, run `npm run serve` to build and run the web app locally. Once the build completes, open a new browser tab or window with the URL specified in the terminal window.
+
+![](./images/02/vue-serve.png)
+
+4. Click on the "Scan" Button. A pop-up will appear as Chrome scans for devices. Once your device appears, click on it and click the "Pair" button. 
+
+![](./images/02/ble-demo.gif)
+
+In the local app, the screen will update as the connection is made and data is retrieved from the device.
+
+5. Now, grab a LiPo battery from one of the lab proctors, plug it into the JST port on your Argon and unplug your Argon from USB power. Notice how the web app updates automatically as your Argon advertises state changes.
+
 ## Bonus: Working with Mesh Publish and Subscribe
 
 If you've gotten this far and still have some time on your hands, how about some extra credit? So far, everything you've created has been isolated to a single device, a Particle Argon. Particle 3rd generation devices come with built-in mesh-networking capabilities.
 
 If you have a Xenon on hand, why not try creating a mesh network with your Argon and adding the Xenon by [following this lab in the Particle docs](https://docs.particle.io/workshops/mesh-101-workshop/mesh-messaging/)? Then, use `Mesh.publish` and `subscribe` to add some interactivity between your two devices, like taking a heart-rate reading when the `SETUP` button on the Xenon is pressed, or lighting up the `D7` LED on the Xenon each time the barometer sensor takes a reading.
-
-## Bonus: Working with BLE and NFC
-
-If you're still looking for something else to do, how about some extra, extra credit?
-
-***Try the BLE APIs***
-Recently released Beta support for BLE and NFC and if you're running Device OS v1.3.0 or later, you can try them out on any Gen 3 device (Argon, Boron, or Xenon). Why not try adding BLE and/or NFC support to your existing setup? 
-
-***Here are a couple of ideas:***
-
-- Advertise temperature and humidity readings via BLE and read from a BLE App. Check out [this resource for some hints](https://blog.particle.io/2019/06/26/get-started-with-ble-and-nfc/).
-- Do the same as above, but with NFC.
-- Turn your Particle device into a [UART Peripheral](https://docs.particle.io/tutorials/device-os/bluetooth-le/#uart-peripheral).
-- View device event logs over [BLE](https://docs.particle.io/tutorials/device-os/bluetooth-le/#ble-log-handler).
-- Use [WebBLE in Chrome](https://docs.particle.io/tutorials/device-os/bluetooth-le/#chrome-web-ble) to view sensor data!
 
 ## Appendix: Grove sensor resources
 

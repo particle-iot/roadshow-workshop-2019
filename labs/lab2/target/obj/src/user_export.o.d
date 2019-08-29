@@ -1,4 +1,4 @@
-/Users/bsatrom/Development/particle/workshops/thatconf-workshop-2019/labs/lab2/target//obj/./src/user_export.o: \
+/Users/bsatrom/Development/particle/workshops/roadshow-workshop-2019/labs/lab2/target//obj/./src/user_export.o: \
  src/user_export.c \
  ../../../modules/shared/nRF52840/inc/user_part_export.c \
  ../../../modules/shared/nRF52840/inc/module_user_init.h \
@@ -38,7 +38,8 @@
  ../../../hal/inc/pinmap_hal.h ../../../hal/inc/hal_platform.h \
  ../../../hal/src/argon/hal_platform_config.h \
  ../../../hal/src/nRF52840/hal_platform_nrf52840_config.h \
- ../../../hal/inc/hal_irq_flag.h \
+ ../../../hal/src/nRF52840/pinmap_impl.h \
+ ../../../hal/src/argon/pinmap_defines.h ../../../hal/inc/hal_irq_flag.h \
  ../../../modules/shared/nRF52840/inc/user_dynalib.h
 
 ../../../modules/shared/nRF52840/inc/user_part_export.c:
@@ -124,6 +125,10 @@
 ../../../hal/src/argon/hal_platform_config.h:
 
 ../../../hal/src/nRF52840/hal_platform_nrf52840_config.h:
+
+../../../hal/src/nRF52840/pinmap_impl.h:
+
+../../../hal/src/argon/pinmap_defines.h:
 
 ../../../hal/inc/hal_irq_flag.h:
 

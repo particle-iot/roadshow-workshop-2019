@@ -1,4 +1,4 @@
-/Users/bsatrom/Development/particle/workshops/thatconf-workshop-2019/labs/lab2/target//obj/./src/newlib_stubs.o: \
+/Users/bsatrom/Development/particle/workshops/roadshow-workshop-2019/labs/lab2/target//obj/./src/newlib_stubs.o: \
  src/newlib_stubs.cpp \
  ../../../modules/shared/nRF52840/inc/user-part/newlib_stubs.inc \
  /Users/bsatrom/.particle/toolchains/gcc-arm/5.3.1/arm-none-eabi/include/sys/types.h \
