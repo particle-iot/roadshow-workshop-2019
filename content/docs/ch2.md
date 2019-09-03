@@ -408,12 +408,46 @@ void configureBLE()
 configureBLE();
 ```
 
-8. Next, let's modify the `loop` function. We'll start by removing the `delay` at the end of the function, and adding an if statement, which checks the current elapsed time in milliseconds to see if our set interval time (2 seconds, or 2000 ms, in this case) has elapsed. The net result is the same as the `delay` statement we used previously, but with the added benefit that we're not blocking execution elsewhere between each interval.
+### Refactoring out the blocking delay
+
+Next, let's modify the `loop` function. We'll start by refactoring our firmware to remove the `delay` in the loop. While the delay approach is common when getting started with creating embedded applications, it's a blocking operation. This means that any calls you make to the device during a delay may timeout before being received.
+
+One common way to write periodic code without using `delay` is to use the built-in `millis()` function and keep track of the elapsed time between the last time you performed an operation (like a temp check) and the wait time between operations.
+
+1. First, let's add some global variables to hold the last check time and an interval. Add the following to the top of your project, outside of the `setup` and `loop`.
+
+```cpp
+const unsigned long UPDATE_INTERVAL = 2000;
+unsigned long lastUpdate = 0;
+```
+
+2. Now, in the `loop`, add a local variable to hold the current time elapsed. The `millis()` function returns the number of milliseconds that have elapsed since your device began running the current program. 
+
+```cpp
+unsigned long currentMillis = millis();
+```
+
+3. Next, remove the `delay` at the end of your loop function. Then, wrap the rest of the code with an if statement to see if the `UPDATE_INTERVAL` time has elapsed.
+
+Make sure you also update the `lastUpdate` variable to the current `millis` time or this `if` statement will never evaluate to `true` after the first time it runs.
+
+```cpp
+if (currentMillis - lastUpdate >= UPDATE_INTERVAL)
+{
+  lastUpdate = millis();
+
+  /* rest of Loop code here */ 
+}
+```
+
+Your `loop` should now look like this:
 
 ```cpp
 void loop()
 {
-  if (millis() - lastUpdate >= UPDATE_INTERVAL)
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - lastUpdate >= UPDATE_INTERVAL)
   {
     lastUpdate = millis();
 
@@ -434,7 +468,7 @@ void loop()
 }
 ```
 
-9. Now, let's add our BLE logic to the `loop`, after the `currentLightLevel` if statement. In this code, we check to see if another device (a peripheral) is connected to our Argon. If so. we'll use the diagnostics library to get the current power source, battery state and charge, and set those values to our characteristics, so the connected client can read them.
+4. Now, let's add our BLE logic to the `loop`, after the `currentLightLevel` if statement. In this code, we check to see if another device (a peripheral) is connected to our Argon. If so. we'll use the diagnostics library to get the current power source, battery state and charge, and set those values to our characteristics, so the connected client can read them.
 
 ```cpp
 if (BLE.connected())
@@ -450,7 +484,7 @@ if (BLE.connected())
 }
 ```
 
-10. And that's all you need on the Argon side. Flash the latest firmware to your device and move on to the next step!
+5. And that's all you need on the Argon side. Flash the latest firmware to your device and move on to the next step!
 
 ### Viewing Bluetooth data with Web BLE on Chrome
 

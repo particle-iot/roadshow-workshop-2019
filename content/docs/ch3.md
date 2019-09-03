@@ -1,14 +1,16 @@
-# Chapter 3: Using Particle Webhooks with IFTTT & azure IoT Central
+# Chapter 3: Using Particle Webhooks with IFTTT, and exploring on-device debugging
 
-| **Project Goal**            | Use Particle Webhooks and Integrations to connect your app to IFTTT and Azure IoT Central.                                                                                        |
+| **Project Goal**            | Use Particle Webhooks and Integrations to connect your app to IFTTT; Learn to perform on-device debugging in Particle Workbench.                                                                                        |
 | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **What you’ll learn**       | Working with Particle Integrations, IFTTT, and Azure IoT Central |
-| **Tools you’ll need**       | Particle Workbench, an [IFTTT.com](https://ifttt.com) account, an [Azure account](https://portal.azure.com), a Particle Argon, and the Grove Starter Kit for Particle Mesh.                                                                                                            |
+| **What you’ll learn**       | Working with Particle Integrations, IFTTT, and on-devie debugging in Particle Workbench |
+| **Tools you’ll need**       | Particle Workbench, an [IFTTT.com](https://ifttt.com) account, a Particle Argon, and the Grove Starter Kit for Particle Mesh, a Particle Debugger.                                                                                                            |
 | **Time needed to complete** | 60 minutes                                                                                                                                                                |
 
-In this session, you're going to explore the power of Particle integrations, first with the popular IF This Then That (IFTTT) service, then with Azure IoT Central. If you get stuck at any point during this session, [click here for the completed, working source](https://go.particle.io/shared_apps/5d40aec2279e1e000b9ad57b).
+In this session, you're going to explore the power of Particle integrations with the popular IF This Then That (IFTTT) service, then explore using Particle Workbench to perform on-device debugging. If you get stuck at any point during this session, [click here for the completed, working source](TODO).
 
-## Exploring the Particle CLI and Cloud API
+First, let's take a brief look at the Particle CLI and Device Cloud API.
+
+## Exploring the Particle CLI and Device Cloud API
 
 ### The Particle CLI
 
@@ -119,64 +121,6 @@ IFTTT (If This, Then That) is a web-based service that allows you to create inte
 
 Now, let's modify our device firmware to publish temp and humidity values.
 
-### Refactoring out the blocking delay
-
-First, let's refactor our firmware to remove the `delay` in the loop. While the delay approach is common when getting started with creating embedded applications, it's a blocking operation. This means that any calls you make to the device during a delay may timeout before being received.
-
-One common way to write periodic code without using `delay` is to use the built-in `millis()` function and keep track of the elapsed time between the last time you performed an operation (like a temp check) and the wait time between operations.
-
-1. First, let's add some global variables to hold the last check time and an interval. Add the following to the top of your project, outside of the `setup` and `loop`.
-
-```cpp
-unsigned long previousCheckMillis = 0;
-unsigned long checkInterval = 5000;
-```
-
-2. Now, in the `loop`, add a local variable to hold the current time elapsed. The `millis()` function returns the number of milliseconds that have elapsed since your device began running the current program. 
-
-```cpp
-unsigned long currentMillis = millis();
-```
-
-3. Next, remove the `delay` at the end of your loop function. Then, wrap the rest of the code with an if statement to see if the `checkInterval` time has elapsed.
-
-Make sure you also update the `previousCheckMillis` variable to the current `millis` time or this `if` statement will never evaluate to `true` after the first time it runs.
-
-```cpp
-if (currentMillis - previousCheckMillis > checkInterval) { 
-  previousCheckMillis = millis();
-
-  /* rest of Loop code here */ 
-}
-```
-
-Your `loop` should now look like this:
-
-```cpp
-void loop()
-{
-  unsigned long currentMillis = millis();
-
-  if (currentMillis - previousCheckMillis > checkInterval)
-  {
-    previousCheckMillis = millis();
-
-    temp = (int)dht.getTempFarenheit();
-    humidity = (int)dht.getHumidity();
-
-    Serial.printlnf("Temp: %f", temp);
-    Serial.printlnf("Humidity: %f", humidity);
-
-    double lightAnalogVal = analogRead(A0);
-    currentLightLevel = map(lightAnalogVal, 0.0, 4095.0, 0.0, 100.0);
-
-    if (currentLightLevel > 50)
-    {
-      Particle.publish("light-meter/level", String(currentLightLevel), PRIVATE);
-    }
-  }
-}
-```
 ### Publishing a payload with temp and humidity values
 
 Now, let's send the current temp, humidity and light level using a `Particle.publish` event. You'll sind a single event with all three values in a single JSON object. To do this, you'll use the `JSONParserGenerator` library.
@@ -320,251 +264,128 @@ Once you have some processed data, you can add a chart to your sheet!
 
 ![](./images/04/finalchart.png)
 
-And that's how you do DataViz with Google Sheets and IFTTT. Now let's explore integrating with Azure IoT Central.
+And that's how you do DataViz with Google Sheets and IFTTT. Now performing on-device debugging with Particle Workbench.
 
-## Integrating with Azure IoT Central
+## On-Device Debugging with Workbench
 
-IFTTT is a great tool for intrgrating with a variety of 3rd party tools, but sometimes you need to backhaul your data to a cloud provider for additional processing or routing. Thankfully, Particle Integrations make this easy. 
+So far in this workshop, we've used the USB Serial interface to inspect and debug the current state of our devices with `Serial.print()` statements. And while this approach is handy for quickly inspecting the state of a running application, Particle provides first-class on-device debugging support with Particle Workbench. In this section, we'll explore using Workbench to step-debug our Particle-powered app.
 
-In this section, you'll explore Azure IoT Central, ingest data, and add simple visualizations. First, you'll need to set-up an IoT Hub instance.
+### Connect the Particle Debugger
 
-### Setting up Azure IoT Central
+To complete this portion of the lab, you'll need the following:
 
-1.  Sign up for an [Azure Account](https://azure.microsoft.com/en-us/get-started/), or sign in if you already have one.
+- Particle Workbench
+- The trusty Argon you've been using for other parts of this lab
+- One [Particle Debugger](https://store.particle.io/products/particle-debugger)
+- A free USB port on your laptop
 
-![](./images/04/azureacct.png)
+Both the Debugger and the Particle device must be connected to the same computer via USB, so make sure you have enough ports available. If your laptop has only USB C ports available, ask a lab proctor for an adapter.
 
-2.  In the dashboard, click "Create a resource." Then click "Internet of Things," and "IoT Central Application" at the top of the list.
+Connect the debugger to the debug port on your Particle device using the provided ribbon cable, and plug both into your computer. The debug port consists of ten exposed pins protected by some plastic, and you can find it next to the LiPo battery port near the top of the device.
 
-![](./images/04/centrallist.png)
+![](./images/03/DebuggerCable.png)
 
-3. Give the IoT Central Application an name and URL (both must be globally unique). Then, select a subscription, select or create a resource group, choose a pricing tier, "Custom application" for the template, and East US for the location. Finally, click "Create" and wait for the deployment to complete.
+### Create a debug firmware binary
 
-![](./images/04/createcentralapp.png)
+Once everything is connected and powered on, you’ll need to put your Particle device into Device Firmware Update (DFU) mode. In order for Workbench to facilitate on-device debugging, it needs to compile and flash a debug build of your application and the Particle Device OS firmware in a single binary. You’ll sometimes see this referred to as a “monolithic” build because this differs from the normal build process, where Device OS and your application firmware can be updated independent of one another.
 
-4. When the deployment completes, click the "Go to resource" button in the notification window.
+1. To put your device in DFU mode, press and hold the `MODE` and `RESET` buttons on the device. Then, release the `RESET` button, while continuing to hold the `MODE` button until the RGB LED on the device starts blinking yellow.
 
-5. Click the URL for your IoT Central Application to open it in a new tab.
+![](./images/03/DFU.gif)
 
-### Adding Device Telemetry and Commands
+2. Now that you’re setup on the hardware side, let’s start a debugging session and cover some Workbench basics. Make sure your project from this workshop is open in Workbench. Click the "bug" icon in the VS Code / Workbench sidebar to open the debug sidebar.
 
-6. Click the "Create Device Templates" card on the home page. Click "Custom" in the next screen.
+3. Click the debug configurations dropdown and select the "Particle debugger (argon, boron/bsom, xenon)" option.
 
-![](./images/04/centralhome.png)
+Now, get ready to wait a bit as Workbench creates a debug binary for your project. This will go much faster on repeat runs, but the first run is a good time to grab a cup of coffee, take a stretch break, or [practice your sword-fighting in the hallway](https://xkcd.com/303/).
 
-7. Name the template "Particle Argon" and click "Create."
+![](./images/03/DebugMenu.png)
 
-![](./images/04/templatehome.png)
+4. Once the debug binary is built and flashed to your device, Workbench will halt and your device will power down, which you’ll see once the onboard RGB LED turns off. You’ll also see the following message in the Debug Console, which is expected.
 
-8. Click the "New" menu option and select "Telemetry."
+![](./images/03/DebugConsole.png)
 
-![](./images/04/addtelemetry.png)
+5. Click the continue button to power your device back up. Once you’re breathing cyan again, you’re ready to debug!
 
-9. Fill in the telemetry options using the data below and click "Save."
+![](./images/03/ContinueButton.png)
 
-| Display Name | Field Name | Units | Minimum Value | Maximum Value | Decimal Places |
-| ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | 
-| Temperature | temp | degF | 0 | 110 | 0 |
+### Step-debug your device with Workbench
 
-![](./images/04/createtelemetry.png)
+#### Setting breakpoints and stepping through code
 
-10. Repeat steps 8-9 for humidity and light, using the values below.
+1. Let's start with one of the most commonly-used debug features: setting breakpoints. This allows you to pause and inspect the state of running code during execution. You can set breakpoints by clicking in the gutter next to an individual line, or from the “Breakpoints” section of the debug sidebar. 
 
-| Display Name | Field Name | Units | Minimum Value | Maximum Value | Decimal Places |
-| ------------ | ------------ | ------------ | ------------ | ------------ | ------------ | 
-| Humidity | humidity | % | 0 | 100 | 0 |
-| Light Level | light | % | 0 | 100 | 2 |
+2. Click on the gutter next to the line that reads the current temp from your device. When a breakpoint is set, a red circle will appear next to the line on which to break. 
 
-Once done, you'll start to see simulated data show up on the right side of the screen.
+3. Since you set your first breakpoint inside of the `loop`, it will be hit automatically after the interval period passes. You'll know that execution is paused because the line you set a breakpoint on will be highlighted in yellow and an arrow will appear in the gutter next to that line.
 
-![](./images/04/alltelemetry.png)
+![](./images/03/break.png)
 
-11. Click the "Commands" menu item, then click the "New Command" button.
+4. Once a breakpoint is hit, the line in question will be highlighted in yellow. From here, you can use the Debug menu at the top of the screen to step through your code. From left to right in the image below, those buttons allow you to continue, step over the current line, step into the current line, step out of the current scope, restart the debug session (you’ll need to put the device back in DFU mode for this to work) and finally, to disconnect the session.
 
-![](./images/04/newcommand.png)
+![](./images/03/debugmenu2.png)
 
-12. In the "Configure Command" section, enter "Read Sensor Vals" for the "Display Name," and "readSensors" for the "Field Name." Then, click save.
+5. Press the continue button. Your project will resume execution and break again on teh same line after the interval delay elapses.
 
-![](./images/04/valscommand.png)
+6. It's also possible to only break code when a condition you define is met. Start by setting another breakpoint a few lines later on the `createEventPayload` line.
 
-13. Add another command with the name "Toggle LED" and "toggleLed" for the "Field Name."
+7. Right click on the gutter next to that line and select the "Add conditional breakpoint" option.
 
-### Create a Real Device in IoT Central
+8. In the expression window that expands under the line you selected, you can enter a simple expression to evaluate each time this line is reached. When the expression evaluates to true, the breakpoint will halt execution. Otherwise, execution will continue as normal. Enter the expression `temp > 68` and hit Enter.
 
-14. Click the Device Explorer sidebar menu. Then, click the "+" button and select "Real" to create a real device. This is an IoT Central representation of your physical Argon.
+![](./images/03/conditional.png)
 
-![](./images/04/deviceexplorer.png)
+9. Hit the continue button again. This time, execution will stop on your conditional breakpoint. Try changing the conditional value to `temp > 90` and hit the continue button again. Observe that, this time, the breakpoint is not hit.
 
-15. Click "Create."
+#### Inspecting variables
 
-![](./images/04/realdevice.png)
+In addition to step-debugging to inspect the execution of our apps, we often want to inspect the state of certain variables and objects. Workbench provides two ways to do this: Either by hovering over a variable in the code window, or by viewing variables in the "Variables" panel of the debug sidebar.
 
-16. Click the "Connect" menu item at the top right.
+1. While debugging and paused on any line, hover your mouse over the `currentLightLevel` variable. A tooltip will appear showing the current value of the variable.
 
-![](./images/04/realdevicemain.png)
+2. To view all variables, expand the "Variables" panel of the debug sidebar. This panel shows information about all local, global and static variables currently in scope at the point of execution.
 
-17. Copy the "Primary Key" and "Device ID" from the popup window. You'll need these for the next step.
+![](./images/03/variablessidebar.png)
 
-![](./images/04/devicecreds.png)
+#### Watching variable values
 
-18. Before moving on, you'll need to create a connection string to use in our firmware to connect to Azure IoT Central. To do this, you have two options: 1) The [Azure Keygen Utility](https://github.com/Azure/dps-keygen), which must be installed locally, or 2) this [Web-based tool](https://github.com/Azure/dps-keygen) from Azure Dev Advocate Dave Glover. The latter is not recommended for production instances, but is fine for this lab.
+Beyond inspecting local and global variables, you can use the watch panel to tell the debugger to keep track of the state of a given variable or object. This can be quite useful if you want to see how a portion of your application mutates or is affected by another variable, or if you want to take a closer look at when a given variable or object comes into or goes out of scope as your app is running.
 
-![](./images/04/keygen.png)
+1. To watch a variable, expand the "Watch" panel of the debug sidebar. Click the "+" symbol, and add `jw` in the expression box. 
 
-Now, let's update our firmware to integrate with Azure IoT Central!
+![](./images/03/jw.png)
 
-### Using the Azure IoT Central Device Bridge Library
+2. Now, add a breakpoint to the first line in the `createEventPayload` function, which creates the `JsonWriterStatic` object.
 
-First, you'll need to install a library to work with Azure IoT Central.
+![](./images/03/jwbreakpoint.png)
 
-1. Open the Workbench command palette and select the "Particle: Install Library" option.
+3. Start (or continue) debugging until you reach the breakpoint you just set. Hit the step-over icon (second from the left) and watch how the `jw` value in the Watch window changes. 
 
-2. Enter "AzureIotHubClient" for the library name.
+4. Hit the step-over icon a few more times until you reach the end of the `createEventPayload` function, and observe how the Watch value changes.
 
-3. Once the library is installed, add an include to the top of your project.
+#### Navigating the call stack
 
-```cpp
-#include "AzureIotHubClient.h"
-```
+Finally, let's look at using the debugger to navigate the call stack.
 
-4. Just below the include, add another line for the connection string. Replace the text in quotes with the string you generated in the last section.
+1. Start by adding the breakpoint to the first line of the `toggleLed` function. If you've stopped debugging, restart and continue until your device is breathing cyan.
 
-```cpp
-#define AZURE_CONNECTON_STRING "<Your Azure IoT Hub or Azure IoT Central Connection String>"
-```
+![](./images/03/callstackbreakpoint.png)
 
-5. Next, create a callback method for Azure IoT to use when you call a command from IoT Central, and initialize the Hub object. The second parameter is for a Cloud2Device messages, which you're not using here, so you just set it to `NULL`.
+2. Open the console and call the `toggleLed` Cloud function using the `Call` button on  your device dashboard screen. The breakpoint you set on the `toggleLed` function will be hit shortly after you call the function.
 
-```cpp
-int callbackDirectMethod(char *method, byte *payload, unsigned int length);
+4. Expand the "Call Stack" panel of the Debug sidebar. This view shows you the entire call stack for your application, from the Device OS logic that handled calling your function, all the way up to the main program loop. You can click on any item in the stack list to view the source and current execution location of the program.
 
-IotHub hub(AZURE_CONNECTON_STRING, NULL, callbackDirectMethod);
-```
+![](./images/03/incallstack.png)
 
-6. One of the commands you set-up in IoT Central was `readSensors`, which you don't have yet, so let's create it. This just uses the same code in the `loop`, which you could refactor into this function, or leave as-is if you want.
+#### Advanced debugging features
 
-```cpp
-void readSensors()
-{
-  temp = (int)dht.getTempFarenheit();
-  humidity = (int)dht.getHumidity();
+In addition to the features covered in this lab, the Workbench debugger provides access to several debug features built-in to VS Code and leveraged by the cortex-debug extension, including the ability to inspect and edit hardware registers, peripherals, and even direct memory locations. All of these are outside of the scope of this workshop, so [check out the docs](https://code.visualstudio.com/docs/editor/debugging) for these tools to learn more about how to use them.
 
-  double lightAnalogVal = analogRead(A0);
-  currentLightLevel = map(lightAnalogVal, 0.0, 4095.0, 0.0, 100.0);
+### Stepping out of the debug cycle
 
-  createEventPayload(temp, humidity, currentLightLevel);
-}
-```
+Once you’re done debugging and ready to resume normal coding and flashing, you’ll need to get your device out of its debug state, meaning that you want to replace the “monolithic” debug build with the hybrid application and device OS firmware. To do this, put the device back into DFU mode and run the `Particle: Flash application & Device OS (local)` command in the Workbench command palette.
 
-7. Now, let's define the `callbackDirectMethod` function. You set-up two methods in IoT Central, named `readSensors` and `toggleLed` (which is also the name of our `Particle.function` from the last lab). Azure IoT passes the method name in as a string, so you can determine which method is called using the `strcmp` C function, which returns `0` if the strings match. If you get a match, you'll publish a debug message to the Particle Device Cloud and then call the appropriate function. Finally, you'll return a 200 HTTP Status Code, or a 400 if the method string doesn't match what you expect.
-
-```cpp
-int callbackDirectMethod(char *method, byte *payload, unsigned int payloadLength)
-{
-  if (strcmp(method, "readSensors") == 0)
-  {
-    Particle.publish("iot-central/debug", "Read Sensors from IoT Central!", PRIVATE);
-    readSensors();
-  }
-  else if (strcmp(method, "toggleLed") == 0)
-  {
-    Particle.publish("iot-central/debug", "Toggle LED from IoT Central!", PRIVATE);
-    toggleLed("");
-  }
-  else
-  {
-    return 400;
-  }
-
-  return 200;
-}
-```
-
-8. Now, let's modify the firmware to send telemetry data to Azure IoT Central. You'll need to modify the `createEventPayload` method to publish an event to Azure IoT, in addition to the Particle Device Cloud. The `hub.loop()` method checks to make sure you're connected to Azure IoT and, if so, it adds the Azure Device ID to the payload and sends a debug message to the Particle Device Cloud. Finally, `hub.publish()` sends the payload with our telemetry data to Azure IoT.
-
-```cpp{11-17,20-23}
-void createEventPayload(int temp, int humidity, double light)
-{
-  JsonWriterStatic<256> jw;
-  {
-    JsonWriterAutoObject obj(&jw);
-
-    jw.insertKeyValue("temp", temp);
-    jw.insertKeyValue("humidity", humidity);
-    jw.insertKeyValue("light", light);
-    
-    if (hub.loop())
-    {
-      Particle.publish("iot-central/debug", "Sending Env Vals", PRIVATE);
-      jw.insertKeyValue("deviceid", hub.getDeviceId());
-    } else {
-      Particle.publish("iot-central/debug", "IoT Hub Not Connected!", PRIVATE);
-    }
-  }
-
-  if (hub.loop())
-  {
-     hub.publish(jw.getBuffer());
-  }
-
-  Particle.publish("env-vals", jw.getBuffer(), PRIVATE);
-}
-```
-
-9. Flash your device and, once it comes online, you should see your Azure IoT debug messages in the Particle Console.
-
-![](./images/04/consoledebug.png)
-
-10. Navigate back to your Azure IoT Central application and click the "Devices" menu item. Click on your real device (not the simulated device) and you'll be taken to the telemetry dashboard, which will provide a live view of incoming data from your device.
-
-![](./images/04/telemetry.png)
-
-
-11. Now, click the "Commands" menu item for your device, which should show the two commands you set-up in the device template. Click "Run" on the "Toggle LED" command.
-
-![](./images/04/commands.png)
-
-12. After the command completes, the LED on your device should light up, and you'll see a debug message in the Particle Console.
-
-![](./images/04/leddebug.png)
-
-Now that everything is configured and you're streaming sensor data into Azure IoT Central, let's build some more visualizations.
-
-### Building Visualizations in IoT Central
-
-To build dashboard visualizations for our Particle Device, you'll need to edit the device template. 
-
-1. Click on the "Device Templates" menu item in IoT Central and click on your "Particle Argon" template.
-
-![](./images/04/templates.png)
-
-2. Click the "Dashboard" menu item.
-
-![](./images/04/widgets.png)
-
-3. Click the "Last Known Value" widget. In the configuration window, set the title to "Last Temp," the measurement type to "Telemetry" and, in "Measures", click the visibility icon next to "Temperature" to select it.
-
-![](./images/04/lasttemp.png)
-
-4. Click save, and the widget will show up in the main panel, with simulated data.
-
-![](./images/04/lasttempsim.png)
-
-5. Repeat steps 3 and 4 for the humidity and light sensor values.
-
-![](./images/04/allsensors.png)
-
-6. Now, click the "Line Chart" widget. In the configuration window, enter "Env Vals" as the title, set a time range to the past hour, and click the visibility icon for all three values to select them.
-
-![](./images/04/createchart.png)
-
-7. Click save and the chart will be created, again with simulated data.
-
-![](./images/04/allwidgets.png)
-
-8. Click on the "Devices" left menu item, and select your real device. Click the "Dashboard" top menu item and you'll see the real values from your Particle Argon.
-
-![](./images/04/realdashboard.png)
+And if you ever run into weird errors while debugging or flashing, the Workbench clean commands are your friends! In my experience, when these things pop up, running `Particle: Clean application & Device OS (local)` and `Particle: Clean application for debug (local)` are usually enough to set things right again.
 
 <hr/>
 

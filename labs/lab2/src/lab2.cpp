@@ -21,10 +21,8 @@ BleCharacteristic batLevelCharacteristic("batLevel", BleCharacteristicProperty::
 
 DHT dht(D2);
 ChainableLED leds(A4, A5, 1);
-0
 
-    int
-    toggleLed(String args);
+int toggleLed(String args);
 
 int temp, humidity;
 double currentLightLevel;
@@ -65,7 +63,9 @@ void setup()
 
 void loop()
 {
-  if (millis() - lastUpdate >= UPDATE_INTERVAL)
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - lastUpdate >= UPDATE_INTERVAL)
   {
     lastUpdate = millis();
 

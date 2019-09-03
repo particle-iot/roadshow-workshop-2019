@@ -1,6 +1,6 @@
-/Users/bsatrom/Development/particle/workshops/thatconf-workshop-2019/labs/lab3/target//obj/./src/module_info.o: \
- src/module_info.c ../../../dynalib/inc/module_info.inc \
- ../../../dynalib/inc/module_info.h ../../../services/inc/static_assert.h \
+/Users/bsatrom/Development/particle/workshops/roadshow-workshop-2019/labs/lab3/target/obj/./src/module_info.o: \
+ src/module_info.c ../dynalib/inc/module_info.inc \
+ ../dynalib/inc/module_info.h ../services/inc/static_assert.h \
  /Users/bsatrom/.particle/toolchains/gcc-arm/5.3.1/lib/gcc/arm-none-eabi/5.3.1/include/stddef.h \
  /Users/bsatrom/.particle/toolchains/gcc-arm/5.3.1/lib/gcc/arm-none-eabi/5.3.1/include/stdint.h \
  /Users/bsatrom/.particle/toolchains/gcc-arm/5.3.1/arm-none-eabi/include/stdint.h \
@@ -10,11 +10,11 @@
  /Users/bsatrom/.particle/toolchains/gcc-arm/5.3.1/arm-none-eabi/include/sys/_intsup.h \
  /Users/bsatrom/.particle/toolchains/gcc-arm/5.3.1/arm-none-eabi/include/sys/_stdint.h
 
-../../../dynalib/inc/module_info.inc:
+../dynalib/inc/module_info.inc:
 
-../../../dynalib/inc/module_info.h:
+../dynalib/inc/module_info.h:
 
-../../../services/inc/static_assert.h:
+../services/inc/static_assert.h:
 
 /Users/bsatrom/.particle/toolchains/gcc-arm/5.3.1/lib/gcc/arm-none-eabi/5.3.1/include/stddef.h:
 
