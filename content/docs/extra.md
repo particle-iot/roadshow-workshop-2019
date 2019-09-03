@@ -12,8 +12,6 @@ Now that you've gotten a survey of all that the Particle ecosystem offers, why n
 
 4.  Create a Particle-powered cross-platform mobile app using [NativeScript and Vue.js](https://www.nativescript.org/vue).
 
-**If you're participating in our [in-conference scavenger hunt](http://events.particle.io/thatconference2019/scavengerhunt), each of these activities is worth lots of points towards our raffle prizes. Why try them all?**
-
 ## Particle Resources
 
 - [Docs and Guides](https://docs.particle.io/guide/getting-started/intro/photon/)
