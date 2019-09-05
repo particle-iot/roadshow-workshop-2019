@@ -26,44 +26,43 @@ If you need to actively put your device in to "Listening Mode", hold down the `M
 
 3. Make sure your phone has Bluetooth turned on. Open the Particle Mobile App and login to your particle account, if you have not already.
 
-![](./images/01/app-login-filled.jpg)
+![](./images/01/app-login-filled.png)
 
-4.  On the "Your Devices" screen, click the "+" icon to add a new device.
+4.  On the "Your Devices" screen, click the "+" icon to add a new device. Choose the "Argon/Boron/Xenon" option.
 
-<img src="./images/01/app-your-devices-empty.jpg" class="two-per-line" />
-<img src="./images/01/app-add-device.jpg" class="two-per-line" />
+<img src="./images/01/app-your-devices-empty.png" class="two-per-line" />
+<img src="./images/01/app-add-device.png" class="two-per-line" />
 
-5.  Select the "Mesh" option and choose the "Argon" option.
-
-![](./images/01/app-choose-mesh-device.jpg)
-
-6.  The next screen will instruct you to find the data matrix printed on your Argon. Using your phone's camera, scan the code. 
+5.  The next screen will instruct you to find the data matrix printed on your Argon. Using your phone's camera, scan the code. 
 
 ::: tip Give the app Camera permissions
 Make sure to allow the app to access your camera to complete this step.
 ::: 
 
-<img src="./images/01/app-argon-get-ready.jpg" class="two-per-line" />
-<img src="./images/01/app-argon-scan-sticker.jpg" class="two-per-line" />
+<img src="./images/01/app-argon-scan-sticker.png" class="two-per-line" />
+<img src="./images/01/app-argon-scan-sticker2.png" class="two-per-line" />
 
-7. The app will now use Bluetooth to pair with your device. If this is the first time your Argon is connected, it is probably due for a device OS update. This is handled automatically by the App — this may take some time, depending on the number of updates pending.
+<img src="./images/01/app-argon-get-ready.png" class="two-per-line" />
+<img src="./images/01/app-argon-paired.png" class="two-per-line" />
 
-<img src="./images/01/app-update-device-os.jpg" class="two-per-line" />
+6. The app will now use Bluetooth to pair with your device. If this is the first time your Argon is connected, it is probably due for a device OS update. This is handled automatically by the App — this may take some time, depending on the number of updates pending.
+
+<img src="./images/01/app-update-device-os.png" class="two-per-line" />
 <img src="./images/01/app-updating-device-os.jpg" class="two-per-line" />
 
-8. After the update is complete, the <!--Argon will return to listening mode (blinking blue) and the-->app will ask if you want to add the Argon to a mesh network. For now, select "_NO, DON'T USE IN MESH_," as you will explore the mesh networking capabilities later on.
+7. After the update is complete, the <!--Argon will return to listening mode (blinking blue) and the-->app will ask if you want to add the Argon to a mesh network. For now, select "_NO, DON'T USE IN MESH_," as you will explore the mesh networking capabilities later on.
 
-![](./images/01/app-argon-use-in-mesh.jpg)
+![](./images/01/app-argon-use-in-mesh.png)
 
-9. Conecct your device to the cloud, by providing it with Wi-Fi. Select the Wi-Fi you intend to use, and enter the password.
+8. Conecct your device to the cloud, by providing it with Wi-Fi. Select the Wi-Fi you intend to use, and enter the password.
 
-<img src="./images/01/app-argon-choose-wifi.jpg" class="two-per-line" />
-<img src="./images/01/app-argon-connecting-to-cloud.jpg" class="two-per-line" />
+<img src="./images/01/app-argon-choose-wifi.png" class="two-per-line" />
+<img src="./images/01/app-argon-connecting-to-cloud.png" class="two-per-line" />
 
-10. When your device has connected successfully, you may give it a name. After that, exit the setup.
+9. When your device has connected successfully, you may give it a name. After that, exit the setup.
 
-<img src="./images/01/app-argon-give-name.jpg" class="two-per-line" />
-<img src="./images/01/app-lets-get-building.jpg" class="two-per-line" />
+<img src="./images/01/app-argon-give-name.png" class="two-per-line" />
+<img src="./images/01/app-lets-get-building.png" class="two-per-line" />
 
 Congratulations, you've claimed your first Argon. Now, you'll program it to blink an LED.
 
