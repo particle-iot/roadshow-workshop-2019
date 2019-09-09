@@ -351,7 +351,7 @@ In addition to viewing published messages from the console, you can subscribe to
 
 ## Working with Bluetooth on Particle Devices
 
-For the last section of this lab, we'll explore using BLE to advertise data from your device. Specifically, we'll use BLE to adversise the power and battery state of your Argon, which you'll then read from a browswer using Web BLE and Chrome.
+For the last section of this lab, we'll explore using BLE to advertise data from your device. Specifically, we'll use BLE to advertize the uptime, WiFi signal strength and free memory on your device, which you'll then read from a browser using Web BLE and Chrome.
 
 ### Using Bluetooth with Particle Gen3 Devices
 
@@ -365,32 +365,38 @@ For the last section of this lab, we'll explore using BLE to advertise data from
 #include "DiagnosticsHelperRK.h"
 ```
 
-4. Next, add some global variables to handle timing for updating the battery state outside of the `setup` and `loop` functions.
+4. Now, let's turn on threading in the app, using the `SYSTEM_THREAD` command below. This opt-in change will allow your user firmware and system firmware to run on separate threads, which can speed things up when you're doing cloud publishes and local operations like Bluetooth.
+
+```
+SYSTEM_THREAD(ENABLED);
+```
+
+5. Next, add some global variables to handle timing for updating the device state values outside of the `setup` and `loop` functions.
 
 ```cpp
 const unsigned long UPDATE_INTERVAL = 2000;
 unsigned long lastUpdate = 0;
 ```
 
-5. Now, add a UUID for the battery service, and three characteristic objects to represent battery state, power source, and battery level. The service UUID is arbitrary and you should change it from the default below using a UUID generator like the one [here](https://www.uuidgenerator.net/). Keep track of the UUID you create here  because you'll need it in the next section as well. The Service UUIDs should remain unchanged.
+6. Now, add a UUID for the service, and three characteristic objects to represent uptime, signal strength, and free memory. The service UUID is arbitrary and you should change it from the default below using a UUID generator like the one [here](https://www.uuidgenerator.net/). Keep track of the UUID you create here  because you'll need it in the next section as well. The Service UUIDs should remain unchanged.
 
 ```cpp
 // Private battery and power service UUID
 const BleUuid serviceUuid("5c1b9a0d-b5be-4a40-8f7a-66b36d0a5176"); // CHANGE ME
 
-BleCharacteristic batStateCharacteristic("batState", BleCharacteristicProperty::NOTIFY, BleUuid("fdcf4a3f-3fed-4ed2-84e6-04bbb9ae04d4"), serviceUuid);
-BleCharacteristic powerSourceCharacteristic("powerSource", BleCharacteristicProperty::NOTIFY, BleUuid("cc97c20c-5822-4800-ade5-1f661d2133ee"), serviceUuid);
-BleCharacteristic batLevelCharacteristic("batLevel", BleCharacteristicProperty::NOTIFY, BleUuid("d2b26bf3-9792-42fc-9e8a-41f6107df04c"), serviceUuid);
+BleCharacteristic uptimeCharacteristic("uptime", BleCharacteristicProperty::NOTIFY, BleUuid("fdcf4a3f-3fed-4ed2-84e6-04bbb9ae04d4"), serviceUuid);
+BleCharacteristic signalStrengthCharacteristic("strength", BleCharacteristicProperty::NOTIFY, BleUuid("cc97c20c-5822-4800-ade5-1f661d2133ee"), serviceUuid);
+BleCharacteristic freeMemoryCharacteristic("freeMemory", BleCharacteristicProperty::NOTIFY, BleUuid("d2b26bf3-9792-42fc-9e8a-41f6107df04c"), serviceUuid);
 ```
 
-6. Next, create a function to configure and set-up BLE advertising from your device. This snippet will add the three characteristics you defined above, as well as the service UUID you specified, and will advertise itself as a connectable device.
+7. Next, create a function to configure and set-up BLE advertising from your device. This snippet will add the three characteristics you defined above, as well as the service UUID you specified, and will advertise itself as a connectable device.
 
 ```cpp
 void configureBLE()
 {
-  BLE.addCharacteristic(batStateCharacteristic);
-  BLE.addCharacteristic(powerSourceCharacteristic);
-  BLE.addCharacteristic(batLevelCharacteristic);
+  BLE.addCharacteristic(uptimeCharacteristic);
+  BLE.addCharacteristic(signalStrengthCharacteristic);
+  BLE.addCharacteristic(freeMemoryCharacteristic);
 
   BleAdvertisingData advData;
 
@@ -402,7 +408,7 @@ void configureBLE()
 }
 ```
 
-7. At the end of your `setup` function, call the function you just created.
+8. At the end of your `setup` function, call the function you just created.
 
 ```cpp
 configureBLE();
@@ -468,19 +474,21 @@ void loop()
 }
 ```
 
-4. Now, let's add our BLE logic to the `loop`, after the `currentLightLevel` if statement. In this code, we check to see if another device (a peripheral) is connected to our Argon. If so. we'll use the diagnostics library to get the current power source, battery state and charge, and set those values to our characteristics, so the connected client can read them.
+4. Now, let's add our BLE logic to the `loop`, after the `currentLightLevel` if statement. In this code, we check to see if another device (a peripheral) is connected to our Argon. If so. we'll use the diagnostics library to get the device uptime, signal strength and free memory, and set those values to our characteristics, so the connected client can read them.
 
 ```cpp
 if (BLE.connected())
 {
-  uint8_t powerSource = (uint8_t)DiagnosticsHelper::getValue(DIAG_ID_SYSTEM_POWER_SOURCE);
-  powerSourceCharacteristic.setValue(powerSource);
+  uint8_t uptime = (uint8_t)DiagnosticsHelper::getValue(DIAG_ID_SYSTEM_UPTIME);
+  uptimeCharacteristic.setValue(uptime);
 
-  uint8_t batState = (uint8_t)DiagnosticsHelper::getValue(DIAG_ID_SYSTEM_BATTERY_STATE);
-  batStateCharacteristic.setValue(batState);
+  uint8_t signalStrength = (uint8_t)(DiagnosticsHelper::getValue(DIAG_ID_NETWORK_SIGNAL_STRENGTH) >> 8);
+  signalStrengthCharacteristic.setValue(signalStrength);
 
-  uint8_t batLevel = (uint8_t)(DiagnosticsHelper::getValue(DIAG_ID_SYSTEM_BATTERY_CHARGE) >> 8);
-  batLevelCharacteristic.setValue(batLevel);
+  int32_t usedRAM = DiagnosticsHelper::getValue(DIAG_ID_SYSTEM_USED_RAM);
+  int32_t totalRAM = DiagnosticsHelper::getValue(DIAG_ID_SYSTEM_TOTAL_RAM);
+  int32_t freeMem = (totalRAM - usedRAM);
+  freeMemoryCharacteristic.setValue(freeMem);
 }
 ```
 
@@ -512,9 +520,7 @@ const device = await navigator.bluetooth.requestDevice({
 
 ![](./images/02/ble-demo.gif)
 
-In the local app, the screen will update as the connection is made and data is retrieved from the device.
-
-5. Now, grab a LiPo battery from one of the lab proctors, plug it into the JST port on your Argon and unplug your Argon from USB power. Notice how the web app updates automatically as your Argon advertises state changes.
+In the local app, the screen will update as the connection is made and data is retrieved from the device. As new data is reported to the app from the device, these values will change automatically!
 
 ## Bonus: Working with Mesh Publish and Subscribe
 
