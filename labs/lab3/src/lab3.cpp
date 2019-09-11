@@ -9,11 +9,18 @@
 #include "Grove_ChainableLED.h"
 #include "JsonParserGeneratorRK.h"
 #include "DiagnosticsHelperRK.h"
+#include "Grove-Ultrasonic-Ranger.h"
 
 DHT dht(D2);
 ChainableLED leds(A4, A5, 1);
 
 SYSTEM_THREAD(ENABLED);
+
+int lastRange = 0;
+unsigned char buffer[64];
+int count = 0;
+
+Ultrasonic ultrasonic(D4);
 
 // Private battery and power service UUID
 const BleUuid serviceUuid("5c1b9a0d-b5be-4a40-8f7a-66b36d0a5176");
@@ -63,12 +70,24 @@ void setup()
 
   Particle.function("toggleLed", toggleLed);
 
+  Particle.publishVitals(10);
+
   configureBLE();
 }
 
 void loop()
 {
   unsigned long currentMillis = millis();
+
+  int range;
+
+  range = ultrasonic.MeasureInCentimeters();
+  if (range != lastRange)
+  {
+    lastRange = range;
+
+    Mesh.publish("distance", String(range));
+  }
 
   if (currentMillis - lastUpdate >= UPDATE_INTERVAL)
   {

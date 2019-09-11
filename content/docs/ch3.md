@@ -154,7 +154,13 @@ void createEventPayload(int temp, int humidity, double light)
 5. Now, let's publish a new event, and call the `createEventPayload` function to provide a formatted JSON string for the data parameter. Add the following to the end of your `createEventPayload` function.
 
 ```cpp
-Particle.publish("env-vals", createEventPayload(temp, humidity, currentLightLevel), PRIVATE);
+Particle.publish("env-vals", jw.getBuffer(), PRIVATE);
+```
+
+6. Finally, your `loop` function, call the `createEventPayload` function you just created.
+
+```cpp
+createEventPayload(temp, humidity, currentLightLevel);
 ```
 
 ### Posting sensor values to Google Sheets
