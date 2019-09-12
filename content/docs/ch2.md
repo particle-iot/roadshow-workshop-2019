@@ -6,7 +6,7 @@
 | **Tools you’ll need**       | Access to the internet for build.particle.io and console.particle.io. Plus the Particle CLI, Particle Workbench, a Particle Argon, and Grove Starter Kit for Particle Mesh |
 | **Time needed to complete** | 60 minutes                                                                                                |
 
-In this session, you'll explore the Particle ecosystem via an Argon-powered Grove Starter Kit for Particle Mesh with several sensors! If you get stuck at any point during this session, [click here for the completed, working source](https://go.particle.io/shared_apps/5d769fa0f693030005f7d353).
+In this session, you'll explore the Particle ecosystem via an Argon-powered Grove Starter Kit for Particle Mesh with several sensors! If you get stuck at any point during this session, [click here for the completed, working source](https://go.particle.io/shared_apps/5d7a47ffdaf7a2000a70990f). If you pull this sample code into Workbench, don't forget to install the relevant libraries using the instructions below!
 
 ## Create a new project in Particle Workbench
 
@@ -136,10 +136,10 @@ void setup()
 ```cpp
 void loop()
 {
-  int temp, humidity;
+  float temp, humidity;
 
-  temp = (int)dht.getTempFarenheit();
-  humidity = (int)dht.getHumidity();
+  temp = dht.getTempFarenheit();
+  humidity = dht.getHumidity();
 
   Serial.printlnf("Temp: %f", temp);
   Serial.printlnf("Humidity: %f", humidity);
@@ -167,7 +167,7 @@ Now that you've connected the sensor, let's sprinkle in some Particle goodness.
 
 DHT dht(D2);
 
-int temp, humidity;
+float temp, humidity;
 
 void setup() {
   // Existing setup code here
@@ -183,8 +183,8 @@ void loop() {
 Add the following lines to the end of your `setup` function:
 
 ```cpp
-Particle.variable("temp", temp);
-Particle.variable("humidity", humidity);
+Particle.variable("temp", (double)temp);
+Particle.variable("humidity", (double)humidity);
 ```
 
 3. Flash this code to your device and, when the Argon comes back online, move on to the next step.

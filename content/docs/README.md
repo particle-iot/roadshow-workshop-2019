@@ -10,8 +10,8 @@ The workshops are broken into presentations intermixed with hands-on labs that r
 
 1.  Create a new [Particle account](https://login.particle.io/signup).
 2.  Install the Particle [iOS](https://itunes.apple.com/us/app/particle-build-photon-electron/id991459054?ls=1&mt=8) or [Android](https://play.google.com/store/apps/details?id=io.particle.android.app) App.
-3.  [Install the Particle CLI](https://docs.particle.io/guide/getting-started/connect/photon/#install-the-particle-cli).
-4.  [Install the Particle Workbench IDE](https://www.particle.io/workbench/).
+3.  [Install the Particle CLI](https://docs.particle.io/tutorials/developer-tools/cli/).
+4.  [Install the Particle Workbench IDE](https://www.particle.io/workbench#installation).
 
 ## Workshop Content
 
