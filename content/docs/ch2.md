@@ -160,7 +160,7 @@ Now that you've connected the sensor, let's sprinkle in some Particle goodness.
 
 ### Storing sensor data in Particle variables
 
-1. To use the Particle variable primitive, you need global variables to access. Start by moving the first line of your `loop` which declares the two environment variables (`temp` and `humidity`) to the top of your project, outside of the `setup` and `loop` functions. 
+1. To use the Particle variable primitive, you need global variables to access. Start by moving the first line of your `loop` which declares the two environment variables (`temp` and `humidity`) to the top of your project, outside of the `setup` and `loop` functions. Then, add two more variables of type `double`. We'll need these because the Particle Cloud expects numeric variables to be of type `int` or `double`. 
 
 ```cpp
 #include "Grove_Temperature_And_Humidity_Sensor.h"
@@ -168,6 +168,7 @@ Now that you've connected the sensor, let's sprinkle in some Particle goodness.
 DHT dht(D2);
 
 float temp, humidity;
+double temp_dbl, humidity_dbl;
 
 void setup() {
   // Existing setup code here
@@ -183,11 +184,18 @@ void loop() {
 Add the following lines to the end of your `setup` function:
 
 ```cpp
-Particle.variable("temp", (double)temp);
-Particle.variable("humidity", (double)humidity);
+Particle.variable("temp", temp_dbl);
+  Particle.variable("humidity", humidity_dbl);
 ```
 
-3. Flash this code to your device and, when the Argon comes back online, move on to the next step.
+3. Next, in the `loop` function, just after you read the temp and humidity values from the sensor, add the following two lines, which will implicity cast the raw `float` values into `double` for the device cloud.
+
+```cpp
+temp_dbl = temp;
+humidity_dbl = humidity;
+```
+
+4. Flash this code to your device and, when the Argon comes back online, move on to the next step.
 
 ### Accessing Particle variables from the Console
 
