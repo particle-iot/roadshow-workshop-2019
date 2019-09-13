@@ -232,7 +232,7 @@ If you're not seeing anything after a bit, you can click the "Check now" button 
 
 ![](./images/04/checknow.png)
 
-### Vizualizing data with Google Sheets
+### Visualizing data with Google Sheets
 
 Once you have some processed data, you can add a chart to your sheet!
 
@@ -242,7 +242,7 @@ Once you have some processed data, you can add a chart to your sheet!
 
 ![](./images/04/chart.png)
 
-3. The Chart menu will open on the right side of the window. In the "Chart type" dropdown, select the combination chart type.
+3. The Chart menu will open on the right side of the window. In the "Chart type" drop-down, select the combination chart type.
 
 ![](./images/04/combochart.png)
 

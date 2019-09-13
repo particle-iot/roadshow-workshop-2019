@@ -6,7 +6,7 @@
 | **Tools you’ll need**       | Access to the internet for build.particle.io and console.particle.io. Plus the Particle CLI, Particle Workbench, a Particle Argon, and Grove Starter Kit for Particle Mesh |
 | **Time needed to complete** | 60 minutes                                                                                                |
 
-In this session, you'll explore the Particle ecosystem via an Argon-powered Grove Starter Kit for Particle Mesh with several sensors! If you get stuck at any point during this session, [click here for the completed, working source](https://go.particle.io/shared_apps/5d7a47ffdaf7a2000a70990f). If you pull this sample code into Workbench, don't forget to install the relevant libraries using the instructions below!
+In this session, you'll explore the Particle ecosystem via an Argon-powered Grove Starter Kit for Particle Mesh with several sensors! If you get stuck at any point during this session, [click here for the completed, working source](https://go.particle.io/shared_apps/5d7bb4fe1abb3a0016bd4127). If you pull this sample code into Workbench, don't forget to install the relevant libraries using the instructions below!
 
 ## Create a new project in Particle Workbench
 
@@ -185,10 +185,10 @@ Add the following lines to the end of your `setup` function:
 
 ```cpp
 Particle.variable("temp", temp_dbl);
-  Particle.variable("humidity", humidity_dbl);
+Particle.variable("humidity", humidity_dbl);
 ```
 
-3. Next, in the `loop` function, just after you read the temp and humidity values from the sensor, add the following two lines, which will implicity cast the raw `float` values into `double` for the device cloud.
+3. Next, in the `loop` function, just after you read the temp and humidity values from the sensor, add the following two lines, which will implicitly cast the raw `float` values into `double` for the Device Cloud.
 
 ```cpp
 temp_dbl = temp;
@@ -359,7 +359,7 @@ In addition to viewing published messages from the console, you can subscribe to
 
 ## Working with Bluetooth on Particle Devices
 
-For the last section of this lab, we'll explore using BLE to advertise data from your device. Specifically, we'll use BLE to advertize the uptime, WiFi signal strength and free memory on your device, which you'll then read from a browser using Web BLE and Chrome.
+For the last section of this lab, we'll explore using BLE to advertise data from your device. Specifically, we'll use BLE to advertise the uptime, WiFi signal strength and free memory on your device, which you'll then read from a browser using Web BLE and Chrome.
 
 ### Using Bluetooth with Particle Gen3 Devices
 
