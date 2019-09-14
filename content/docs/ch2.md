@@ -259,7 +259,7 @@ With our new device set-up, you can turn it on in response to Particle function 
 
 ### Turning on the Chainable LED
 
-1. Start by creating an empty function to toggle the LED. Note the function signature, which returns an `int` and takes a single `String` argument.
+1. Start by creating an empty function to toggle the LED. Place the following before the `setup` function. Note the function signature, which returns an `int` and takes a single `String` argument.
 
 ```cpp
 int toggleLed(String args) {
@@ -269,13 +269,17 @@ int toggleLed(String args) {
 2. In the `toggleLED` function, add a few lines turn the LED red, delay for half a second, and then turn it off again.
 
 ```cpp
-leds.setColorHSB(0, 0.0, 1.0, 0.5);
+int toggleLed(String args) {
+  leds.setColorHSB(0, 0.0, 1.0, 0.5);
 
-delay(1000);
+  delay(500);
 
-leds.setColorHSB(0, 0.0, 0.0, 0.0);
+  leds.setColorHSB(0, 0.0, 0.0, 0.0);
 
-return 1;
+  delay(500);
+
+  return 1;
+}
 ```
 
 3. Now, let's call this from the loop to test things out. Add the following line before the delay.
@@ -284,7 +288,7 @@ return 1;
 toggleLed("");
 ```
 
-4. The last step is to flash this new code to your Argon. Once it's updated, the LED will blink red every 10 seconds.
+4. The last step is to flash this new code to your Argon. Once it's updated, the LED will blink red.
 
 ### Setting-up Particle Functions for remote execution
 

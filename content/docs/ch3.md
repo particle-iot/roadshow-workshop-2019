@@ -393,9 +393,9 @@ In addition to the features covered in this lab, the Workbench debugger provides
 
 ### Stepping out of the debug cycle
 
-Once you’re done debugging and ready to resume normal coding and flashing, you’ll need to get your device out of its debug state, meaning that you want to replace the “monolithic” debug build with the hybrid application and device OS firmware. To do this, put the device back into DFU mode and run the `Particle: Flash application & Device OS (local)` command in the Workbench command palette.
+Once you’re done debugging and ready to resume normal coding and flashing, you’ll need to get your device out of its debug state, meaning that you want to replace the “monolithic” debug build with the hybrid application and device OS firmware. To do this, put the device back into DFU mode and run the `Particle: Flash application & DeviceOS (local)` command in the Workbench command palette.
 
-And if you ever run into weird errors while debugging or flashing, the Workbench clean commands are your friends! In my experience, when these things pop up, running `Particle: Clean application & Device OS (local)` and `Particle: Clean application for debug (local)` are usually enough to set things right again.
+And if you ever run into weird errors while debugging or flashing, the Workbench clean commands are your friends! In our experience, when these things pop up, running `Particle: Clean application & DeviceOS (local)` and `Particle: Clean application for debug (local)` are usually enough to set things right again.
 
 <hr/>
 
