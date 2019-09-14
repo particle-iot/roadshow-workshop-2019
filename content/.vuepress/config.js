@@ -2,6 +2,7 @@ module.exports = {
   base: '/',
   themeConfig: {
     repo: 'particle-iot/roadshow-workshop-2019',
+    docsDir: 'content',
     editLinks: true,
     editLinkText: 'Help us improve this page!',
     nav: [

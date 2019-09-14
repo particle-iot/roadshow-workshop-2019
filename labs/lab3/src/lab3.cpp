@@ -34,6 +34,7 @@ void createEventPayload(int temp, int humidity, double light);
 void readSensors();
 
 int temp, humidity;
+double temp_dbl, humidity_dbl;
 double currentLightLevel;
 
 const unsigned long UPDATE_INTERVAL = 2000;
@@ -65,8 +66,8 @@ void setup()
 
   pinMode(A0, INPUT);
 
-  Particle.variable("temp", temp);
-  Particle.variable("humidity", humidity);
+  Particle.variable("temp", temp_dbl);
+  Particle.variable("humidity", humidity_dbl);
 
   Particle.function("toggleLed", toggleLed);
 
@@ -93,8 +94,11 @@ void loop()
   {
     lastUpdate = millis();
 
-    temp = (int)dht.getTempFarenheit();
-    humidity = (int)dht.getHumidity();
+    temp = dht.getTempFarenheit();
+    humidity = dht.getHumidity();
+
+    temp_dbl = temp;
+    humidity_dbl = humidity;
 
     Serial.printlnf("Temp: %f", temp);
     Serial.printlnf("Humidity: %f", humidity);

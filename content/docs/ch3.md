@@ -303,15 +303,19 @@ Once everything is connected and powered on, you’ll need to put your Particle 
 
 3. Click the debug configurations dropdown and select the "Particle debugger (argon, boron/bsom, xenon)" option.
 
-Now, get ready to wait a bit as Workbench creates a debug binary for your project. This will go much faster on repeat runs, but the first run is a good time to grab a cup of coffee, take a stretch break, or [practice your sword-fighting in the hallway](https://xkcd.com/303/).
-
 ![](./images/03/DebugMenu.png)
 
-4. Once the debug binary is built and flashed to your device, Workbench will halt and your device will power down, which you’ll see once the onboard RGB LED turns off. You’ll also see the following message in the Debug Console, which is expected.
+4. Finally, click the green arrow next to the debug configuration dropdown to initiate the debug process.
+
+![](./images/03/GreenArrow.png)
+
+Now, get ready to wait a bit as Workbench creates a debug binary for your project. This will go much faster on repeat runs, but the first run is a good time to grab a cup of coffee, take a stretch break, or [practice your sword-fighting in the hallway](https://xkcd.com/303/).
+
+5. Once the debug binary is built and flashed to your device, Workbench will halt and your device will power down, which you’ll see once the onboard RGB LED turns off. You’ll also see the following message in the Debug Console, which is expected.
 
 ![](./images/03/DebugConsole.png)
 
-5. Click the continue button to power your device back up. Once you’re breathing cyan again, you’re ready to debug!
+6. Click the continue button to power your device back up. Once you’re breathing cyan again, you’re ready to debug!
 
 ![](./images/03/ContinueButton.png)
 

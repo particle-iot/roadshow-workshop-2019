@@ -38,13 +38,15 @@ In this session, you'll explore the Particle ecosystem via an Argon-powered Grov
 
 ![](./images/02/wb-quick-buttons.png)
 
+3. If this is your first time using Particle Workbench, you'll need to log in to your account. Open the command palette (CMD/CTRL + SHIFT + P) type/select the "Particle: Login" command, and follow the prompts to enter your username, password, and two-factor auth token (if you have two-factor authentication set-up).
+
 ### Configuring the workspace for your device
 
 1. Before you can flash code to your device, you need to configure the project with a device type, Device OS firmware version, and device name. Open the command palette and select the "Configure Project for Device" option.
 
 ![](./images/02/wb-cp-configure.png)
 
-2. Choose a Device OS version. For this lab, you should use 1.1.0 or newer.
+2. Choose a Device OS version. For this lab, you should use 1.4.0 or newer.
 
 ![](./images/02/wb-cp-deviceos.png)
 
@@ -52,7 +54,7 @@ In this session, you'll explore the Particle ecosystem via an Argon-powered Grov
 
 ![](./images/02/wb-cp-boron.png)
 
-4. Enter the name of your device and hit "Enter."
+4. Enter the name you assigned to your device when you claimed it and hit "Enter."
 
 ![](./images/02/wb-cp-name.png)
 
@@ -113,6 +115,12 @@ You'll be notified once the library is installed, and a `lib` directory will be 
 ```cpp
 #include "Grove_Temperature_And_Humidity_Sensor.h"
 ```
+
+:::warning
+From time-to-time, the intellisense engine in VS Code that Workbench depends on may report that it cannot find a library path and draw a red squiggly under your `#include` statement above. As long as your code compiles, (which you can verify by opening the command palette [CMD/CTRL+SHIFT+P] and choosing the `Particle: compile application (local)`) you can ignore this error.
+
+You can also resolve the issue by trying one of the steps detailed in this community forum post, [here](https://community.particle.io/t/intellisense-report-issues-here/48734).
+:::
 
 2. Next, initialize the sensor, just after the `#include` statement.
 
