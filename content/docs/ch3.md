@@ -6,7 +6,7 @@
 | **Tools you’ll need**       | Particle Workbench, an [IFTTT.com](https://ifttt.com) account, a Particle Argon, and the Grove Starter Kit for Particle Mesh, a Particle Debugger.                                                                                                            |
 | **Time needed to complete** | 60 minutes                                                                                                                                                                |
 
-In this session, you're going to explore the power of Particle integrations with the popular IF This Then That (IFTTT) service, then explore using Particle Workbench to perform on-device debugging. If you get stuck at any point during this session, [click here for the completed, working source](TODO).
+In this session, you're going to explore the power of Particle integrations with the popular IF This Then That (IFTTT) service, then explore using Particle Workbench to perform on-device debugging. If you get stuck at any point during this session, [click here for the completed, working source](https://go.particle.io/shared_apps/5d40aec2279e1e000b9ad57b).
 
 First, let's take a brief look at the Particle CLI and Device Cloud API.
 
