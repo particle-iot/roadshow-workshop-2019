@@ -79,15 +79,15 @@ IFTTT (If This, Then That) is a web-based service that allows you to create inte
 
 **Note**: During the flow below, you'll need to connect both your Particle and Google accounts with IFTTT. When prompted, follow the on-screen instructions to do so.
 
-1.  Start by heading over to [IFTTT](https://ifttt.com) and either login, or create a new account.
+1.  Start by heading over to [IFTTT](https://ifttt.com/particle) and either login, or create a new account.
 
 ![](./images/04/ifttt.png)
 
-2.  After logging in, click "New Applet" in the top right of your dashboard.
+2.  After logging in, click your profile picture in the top right of your dashboard and select the "Create" menu option.
 
 ![](./images/04/newapplet.png)
 
-3.  Click the "+this" button.
+3.  Click the "+This" button.
 
 ![](./images/04/ifthis.png)
 
@@ -105,15 +105,23 @@ IFTTT (If This, Then That) is a web-based service that allows you to create inte
 
 ![](./images/04/triggerfields.png)
 
-7. You've set-up the trigger on the Particle end, now its time for the **That**+ portion of the setup. Click the "+that" button.
+7. You've set-up the trigger on the Particle end, now its time for the **That**+ portion of the setup. Click the "+That" button.
 
 ![](./images/04/thenthat.png)
 
-8. In the action fields, set the spreadsheet name to "TCEnvVals." Leave the defaults in the other fields and click "Create action."
+8. In the "Search services" input, type "Google Sheets" and click on the Google Sheets card.
+
+![](./images/04/choose-gsheets.png)
+
+9. Click on the "Add row to spreadsheet" card.
+
+![](./images/04/addrow-card.png)
+
+10. In the action fields, set the spreadsheet name to "TCEnvVals." Leave the defaults in the other fields and click "Create action."
 
 ![](./images/04/ifttt-gsheets.png)
 
-9. Click the "Finish" button to create your applet.
+11. Click the "Finish" button to create your applet.
 
 ![](./images/04/ifttt-reviewpng.png)
 
