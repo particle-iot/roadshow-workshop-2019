@@ -168,7 +168,7 @@ Now that you've connected the sensor, let's sprinkle in some Particle goodness.
 
 ### Storing sensor data in Particle variables
 
-1. To use the Particle variable primitive, you need global variables to access. Start by moving the first line of your `loop` which declares the two environment variables (`temp` and `humidity`) to the top of your project, outside of the `setup` and `loop` functions. Then, add two more variables of type `double`. We'll need these because the Particle Cloud expects numeric variables to be of type `int` or `double`. 
+1. To use the Particle variable primitive, you need global variables to access. Start by moving the first line of your `loop` which declares the two environment variables (`temp` and `humidity`) to the top of your project, outside of the `setup` and `loop` functions. Then, add two more variables of type `double`. We'll need these because the Particle Cloud expects numeric variables to be of type `int` or `double`.
 
 ```cpp
 #include "Grove_Temperature_And_Humidity_Sensor.h"
@@ -187,7 +187,7 @@ void loop() {
 }
 ```
 
-2. With global variables in hand, you can add Particle variables using the `Particle.variable()` method, which takes two parameters: the first is a string representing the name of the variable, and the second is the firmware variable to track. 
+2. With global variables in hand, you can add Particle variables using the `Particle.variable()` method, which takes two parameters: the first is a string representing the name of the variable, and the second is the firmware variable to track.
 
 Add the following lines to the end of your `setup` function:
 
@@ -219,7 +219,7 @@ humidity_dbl = humidity;
 
 ![](./images/02/console-vars.png)
 
-Now that you've mastered Particle variables for reading sensor data, let's look at how you can use the function primitive to trigger an action on the device. 
+Now that you've mastered Particle variables for reading sensor data, let's look at how you can use the function primitive to trigger an action on the device.
 
 ## Working with Particle Functions and the Chainable LED
 
@@ -324,7 +324,7 @@ To connect the light sensor, connect a Grove cable to the port of the sensor. Th
 
 ![](./images/02/light-sensor.png)
 
-### Using the sensor 
+### Using the sensor
 
 Let's set-up the sensor on the firmware side so that you can use it in our project. The light sensor is an analog device, so configuring it is easy, no library needed.
 
@@ -365,7 +365,7 @@ In addition to viewing published messages from the console, you can subscribe to
 
 1. Open a new terminal window and type `particle subscribe light-meter mine`
 
-2. Shine a light on the light sensor and wait for readings. You should see events stream across your terminal. Notice that the `light-meter` string is all you need to specify to get the `light-meter/latest` events. By using the forward slash in events, can subscribe via greedy prefix filters. 
+2. Shine a light on the light sensor and wait for readings. You should see events stream across your terminal. Notice that the `light-meter` string is all you need to specify to get the `light-meter/latest` events. By using the forward slash in events, can subscribe via greedy prefix filters.
 
 ![](./images/02/light-cli.gif)
 
@@ -447,7 +447,7 @@ const unsigned long UPDATE_INTERVAL = 2000;
 unsigned long lastUpdate = 0;
 ```
 
-2. Now, in the `loop`, add a local variable to hold the current time elapsed. The `millis()` function returns the number of milliseconds that have elapsed since your device began running the current program. 
+2. Now, in the `loop`, add a local variable to hold the current time elapsed. The `millis()` function returns the number of milliseconds that have elapsed since your device began running the current program.
 
 ```cpp
 unsigned long currentMillis = millis();
@@ -462,7 +462,7 @@ if (currentMillis - lastUpdate >= UPDATE_INTERVAL)
 {
   lastUpdate = millis();
 
-  /* rest of Loop code here */ 
+  /* rest of Loop code here */
 }
 ```
 
@@ -516,15 +516,29 @@ if (BLE.connected())
 
 ### Viewing Bluetooth data with Web BLE on Chrome
 
-There are a number of methods by which you can connect to your BLE-powered Argon. You could use a mobile app (like [Bluefruit](https://apps.apple.com/us/app/adafruit-bluefruit-le-connect/id830125974) from Adafruit), or another Particle 3rd Gen device. You can also use a browser that supports Web BLE, like Chrome, which will do in this section. At the time this lab ws created, Chrome is the only desktop browser that supports Web BLE, so you'll need to have that browser installed to 
+There are a number of methods by which you can connect to your BLE-powered Argon. You could use a mobile app (like [Bluefruit](https://apps.apple.com/us/app/adafruit-bluefruit-le-connect/id830125974) from Adafruit), or another Particle 3rd Gen device. You can also use a browser that supports Web BLE, like Chrome, which will do in this section. At the time this lab was created, Chrome is the only desktop browser that supports Web BLE. You can install Chrome by [going here.](https://www.google.com/chrome/)
 
-1. Clone the [demo web app](https://github.com/bsatrom/particle-web-ble) for this project to your machine using a terminal window
+1. If you don't have **NodeJS** installed, download and [install it here.](https://nodejs.org/en/). It's recommended you use on the **LTS** version.
+
+2. Clone the [demo web app](https://github.com/bsatrom/particle-web-ble) for this project to your machine using a terminal window
 
 ```bash
 $ git clone https://github.com/bsatrom/particle-web-ble
 ```
 
-2. Open the project in your editor of choice, and modify the following snippet in the `src/scripts/ble.js` file to match the Service UUID you specified in your Argon code above. This code scans for available devices that match a specific UUID, so if you changed it, you should only see your device when running the app.
+3. Change directories to your freshly cloned repository
+
+```bash
+cd particle-web-ble
+```
+
+4. Then install all dependencies
+
+```bash
+npm install
+```
+
+5. Open the project in your editor of choice, and modify the following snippet in the `src/scripts/ble.js` file to match the Service UUID you specified in your Argon code above. This code scans for available devices that match a specific UUID, so if you changed it, you should only see your device when running the app.
 
 ```js
 const device = await navigator.bluetooth.requestDevice({
@@ -532,11 +546,11 @@ const device = await navigator.bluetooth.requestDevice({
 });
 ```
 
-3. In a terminal window, run `npm run serve` to build and run the web app locally. Once the build completes, open a new browser tab or window with the URL specified in the terminal window.
+6. In a terminal window, run `npm run serve` to build and run the web app locally. Once the build completes, open a new browser tab or window with the URL specified in the terminal window.
 
 ![](./images/02/vue-serve.png)
 
-4. Click on the "Scan" Button. A pop-up will appear as Chrome scans for devices. Once your device appears, click on it and click the "Pair" button. 
+7. Click on the "Scan" Button. A pop-up will appear as Chrome scans for devices. Once your device appears, click on it and click the "Pair" button.
 
 ![](./images/02/ble-demo.gif)
 
