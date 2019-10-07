@@ -284,6 +284,22 @@ And that's how you do DataViz with Google Sheets and IFTTT. Now performing on-de
 
 So far in this workshop, we've used the USB Serial interface to inspect and debug the current state of our devices with `Serial.print()` statements. And while this approach is handy for quickly inspecting the state of a running application, Particle provides first-class on-device debugging support with Particle Workbench. In this section, we'll explore using Workbench to step-debug our Particle-powered app.
 
+### Prepare for Debugging
+
+In order to perform step debugging and a few other features, you'll need to disable Mesh and BLE support in your application firmware. This is to address a current limitation in software that DeviceOS depends on to handle real-time networking and communication.
+
+At the start of your `setup` function, add the following two lines to disable Mesh and BLE during debugging. The `#if` preprocessor ensures that these commands are only compiled into the binary if you're running a debug build. 
+
+```cpp
+#if defined(DEBUG_BUILD)
+Mesh.off();
+BLE.off();
+#endif
+```
+
+Now, continue onto the next step. When you flash a debug build to your device, you'll automatically disable Mesh and BLE so you can perform step debugging. 
+
+
 ### Connect the Particle Debugger
 
 To complete this portion of the lab, you'll need the following:
